@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation - Demande de Remboursement</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+            color: #1e293b;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 550px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .confirmation-card {
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            padding: 45px 35px;
+            width: 100%;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .confirmation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px -15px rgba(42, 109, 244, 0.2);
+        }
+
+        .success-animation {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: scaleIn 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .checkmark-circle {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #2a6df4, #4a90e2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 15px 35px rgba(42, 109, 244, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(42, 109, 244, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(42, 109, 244, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(42, 109, 244, 0);
+            }
+        }
+
+        .checkmark {
+            color: white;
+            font-size: 60px;
+            font-weight: bold;
+            animation: checkmark 0.8s ease-in-out 0.4s both;
+        }
+
+        @keyframes checkmark {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #1e293b, #2a6df4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .amount-badge {
+            background: linear-gradient(135deg, #e8f0fe, #d4e2fc);
+            border-radius: 100px;
+            padding: 12px 25px;
+            display: inline-block;
+            margin: 0 auto 25px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #2a6df4;
+            border: 2px solid rgba(42, 109, 244, 0.2);
+            box-shadow: 0 5px 15px rgba(42, 109, 244, 0.1);
+            animation: slideInDown 0.6s ease-out 0.3s both;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .amount-badge span {
+            font-size: 16px;
+            font-weight: 400;
+            color: #5a6a7e;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .info-box {
+            background: #f8faff;
+            border-radius: 24px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 1px solid #e8eeff;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out 0.5s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .info-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2a6df4, #4a90e2, #2a6df4);
+            background-size: 200% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        .info-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-title i {
+            color: #2a6df4;
+            font-size: 20px;
+        }
+
+        .installment-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .installment-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px dashed #d0d9e8;
+            animation: slideInRight 0.5s ease-out forwards;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        .installment-item:nth-child(1) { animation-delay: 0.6s; }
+        .installment-item:nth-child(2) { animation-delay: 0.7s; }
+        .installment-item:nth-child(3) { animation-delay: 0.8s; }
+        .installment-item:nth-child(4) { animation-delay: 0.9s; }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .installment-item:last-child {
+            border-bottom: none;
+        }
+
+        .installment-number {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #2a6df4, #4a90e2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 5px 10px rgba(42, 109, 244, 0.2);
+        }
+
+        .installment-details {
+            flex: 1;
+        }
+
+        .installment-amount {
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 18px;
+        }
+
+        .installment-date {
+            font-size: 14px;
+            color: #5a6a7e;
+        }
+
+        .installment-status {
+            padding: 5px 12px;
+            background: #fff3cd;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #856404;
+        }
+
+        .progress-container {
+            margin: 25px 0;
+            animation: fadeIn 0.8s ease-out 0.7s both;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #5a6a7e;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e8eeff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #2a6df4, #4a90e2);
+            border-radius: 10px;
+            animation: progressFill 2s ease-out 1s forwards;
+            box-shadow: 0 0 10px rgba(42, 109, 244, 0.5);
+        }
+
+        @keyframes progressFill {
+            to {
+                width: 25%;
+            }
+        }
+
+        .message-box {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #2a6df4;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            animation: slideInLeft 0.6s ease-out 0.8s both;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .message-box p {
+            font-size: 16px;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        .message-box strong {
+            color: #2a6df4;
+        }
+
+        .timer-box {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 25px 0;
+            color: white;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        .timer {
+            font-size: 36px;
+            font-weight: 700;
+            font-family: monospace;
+            letter-spacing: 5px;
+            margin: 10px 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            animation: fadeInUp 0.6s ease-out 1s both;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2a6df4, #4a90e2);
+            color: white;
+            box-shadow: 0 10px 20px rgba(42, 109, 244, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(42, 109, 244, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #2a6df4;
+            border: 2px solid #2a6df4;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f5ff;
+            transform: translateY(-3px);
+        }
+
+        .reference-number {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8faff;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #5a6a7e;
+            animation: fadeIn 0.8s ease-out 1.1s both;
+        }
+
+        .reference-number strong {
+            color: #2a6df4;
+            font-family: monospace;
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 13px;
+            color: #8a9bb5;
+            animation: fadeIn 1s ease-out 1.2s both;
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(42, 109, 244, 0.05), rgba(74, 144, 226, 0.05));
+            border-radius: 50%;
+            animation: float 20s infinite;
+        }
+
+        .shape1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .shape2 {
+            width: 200px;
+            height: 200px;
+            bottom: -50px;
+            left: -50px;
+            animation-delay: -5s;
+        }
+
+        .shape3 {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        @media (max-width: 480px) {
+            .confirmation-card {
+                padding: 30px 20px;
+            }
+            
+            .title {
+                font-size: 26px;
+            }
+            
+            .amount-badge {
+                font-size: 24px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+    </div>
+
+    <div class="container">
+        <div class="confirmation-card">
+            <div class="success-animation">
+                <div class="checkmark-circle">
+                    <div class="checkmark">✓</div>
+                </div>
+            </div>
+
+            <h1 class="title">Demande de Remboursement</h1>
+            
+            <div style="text-align: center;">
+                <div class="amount-badge">
+                    550€
+                    <span>Montant total à rembourser</span>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title">
+                    <i>📋</i>
+                    Échéancier de remboursement
+                </div>
+                
+                <ul class="installment-list">
+                    <li class="installment-item">
+                        <div class="installment-number">1</div>
+                        <div class="installment-details">
+                            <div class="installment-amount">137,50€</div>
+                            <div class="installment-date">Dans les 12 heures</div>
+                        </div>
+                        <div class="installment-status">En attente</div>
+                    </li>
+                    <li class="installment-item">
+                        <div class="installment-number">2</div>
+                        <div class="installment-details">
+                            <div class="installment-amount">137,50€</div>
+                            <div class="installment-date">Dans les 12 heures</div>
+                        </div>
+                        <div class="installment-status">Planifié</div>
+                    </li>
+                    <li class="installment-item">
+                        <div class="installment-number">3</div>
+                        <div class="installment-details">
+                            <div class="installment-amount">137,50€</div>
+                            <div class="installment-date">Dans les 12 heures</div>
+                        </div>
+                        <div class="installment-status">Planifié</div>
+                    </li>
+                    <li class="installment-item">
+                        <div class="installment-number">4</div>
+                        <div class="installment-details">
+                            <div class="installment-amount">137,50€</div>
+                            <div class="installment-date">Dans les 12 heures</div>
+                        </div>
+                        <div class="installment-status">Planifié</div>
+                    </li>
+                </ul>
+
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Progression du remboursement</span>
+                        <span>0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message-box">
+                <p>
+                    <strong>✅ Votre demande de remboursement a été validée avec succès !</strong>
+                    <br><br>
+                    Notre service vérification analyse vos informations. Les <strong>4 tranches de 137,50€</strong> seront versées automatiquement sur votre compte bancaire <strong>dans les 12 heures</strong>.
+                    <br><br>
+                    Vous recevrez la totalité des <strong>550€</strong> sous 12 heures sans aucune manipulation de votre part.
+                </p>
+            </div>
+
+            <div class="timer-box">
+                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">Délai estimé avant réception des fonds</div>
+                <div class="timer" id="timer">11:59:59</div>
+                <div style="font-size: 13px; opacity: 0.7;">Mise à jour en temps réel</div>
+            </div>
+
+            <div class="reference-number">
+                <div style="margin-bottom: 5px;">Numéro de dossier</div>
+                <strong>RMB-2025-<span id="randomRef"></span></strong>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="window.location.href='index.html'">
+                    Suivre mon remboursement
+                </button>
+                <button class="btn btn-secondary" onclick="window.print()">
+                    Imprimer la confirmation
+                </button>
+            </div>
+
+            <div class="footer-note">
+                Service client disponible 24h/24 au <strong>+33 1 84 80 00 00</strong>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Générer un numéro de référence aléatoire
+            const randomRef = document.getElementById('randomRef');
+            if (randomRef) {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let ref = '';
+                for (let i = 0; i < 8; i++) {
+                    ref += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                randomRef.textContent = ref;
+            }
+
+            // Timer de 12h
+            function updateTimer() {
+                const timerElement = document.getElementById('timer');
+                if (!timerElement) return;
+
+                // Définir la date cible à 12h à partir de maintenant
+                const targetDate = new Date();
+                targetDate.setHours(targetDate.getHours() + 12);
+
+                function formatTime() {
+                    const now = new Date();
+                    const diff = targetDate - now;
+
+                    if (diff <= 0) {
+                        timerElement.textContent = "00:00:00";
+                        return;
+                    }
+
+                    const hours = Math.floor(diff / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    timerElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+
+                formatTime();
+                setInterval(formatTime, 1000);
+            }
+
+            updateTimer();
+
+            // Animation supplémentaire pour les éléments
+            const installments = document.querySelectorAll('.installment-item');
+            installments.forEach((item, index) => {
+                item.style.animationDelay = `${0.6 + (index * 0.1)}s`;
+            });
+        });
+    </script>
+</body>
+</html>
